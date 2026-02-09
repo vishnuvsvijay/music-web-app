@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Music Player - Free Online Music Streaming</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <span>MusicHub</span>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-section="home">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="nav-btn" data-section="search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button class="nav-btn" data-section="playlists">
+                    <i class="fas fa-list"></i> My Playlists
+                </button>
+                <button class="nav-btn" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </nav>
+            <div class="theme-toggle">
+                <button id="themeToggle" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <h1 id="sectionTitle">🎵 Welcome to MusicHub</h1>
+            </header>
+
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <div class="featured-container">
+                    <h2>Featured Tracks</h2>
+                    <div id="featuredTracks" class="tracks-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section id="search" class="content-section">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search music by artist, title, or genre..."
+                        >
+                        <button id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="search-filters">
+                        <select id="genreFilter">
+                            <option value="">All Genres</option>
+                            <option value="jazz">Jazz</option>
+                            <option value="rock">Rock</option>
+                            <option value="electronic">Electronic</option>
+                            <option value="classical">Classical</option>
+                            <option value="pop">Pop</option>
+                        </select>
+                    </div>
+                    <div id="searchResults" class="tracks-grid"></div>
+                </div>
+            </section>
+
+            <!-- Playlists Section -->
+            <section id="playlists" class="content-section">
+                <div class="playlists-container">
+                    <div class="playlist-header">
+                        <h2>My Playlists</h2>
+                        <button id="createPlaylistBtn" class="btn-primary">
+                            <i class="fas fa-plus"></i> New Playlist
+                        </button>
+                    </div>
+                    <div id="playlistsList" class="playlists-list"></div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="settings-container">
+                    <h2>Settings</h2>
+                    
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="autoPlayNext" checked>
+                            Auto-play next track
+                        </label>
+                    </div>
+
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="showVisualizerCheckbox">
+                            Show visualizer
+                        </label>
+                    </div>
+
+                    <div class="settings-group">
+                        <label for="qualitySelect">Audio Quality:</label>
+                        <select id="qualitySelect">
+                            <option value="low">Low (128 kbps)</option>
+                            <option value="medium" selected>Medium (256 kbps)</option>
+                            <option value="high">High (320 kbps)</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-group">
+                        <button id="clearDataBtn" class="btn-danger">
+                            <i class="fas fa-trash"></i> Clear All Data
+                        </button>
+                        <p class="hint">This will delete all saved playlists and preferences</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Player Section -->
+        <footer class="player-footer">
+            <div class="visualizer" id="visualizer" style="display: none;">
+                <canvas id="visualizerCanvas"></canvas>
+            </div>
+
+            <div class="player-container">
+                <!-- Now Playing Info -->
+                <div class="now-playing-info">
+                    <div class="album-art-small">
+                        <img id="playerAlbumArt" src="https://via.placeholder.com/60" alt="Album Art">
+                    </div>
+                    <div class="track-info-small">
+                        <h4 id="playerTrackTitle">No track playing</h4>
+                        <p id="playerArtistName">Unknown Artist</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-section">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressSlider" value="0" min="0" max="100">
+                    <span id="duration">0:00</span>
+                </div>
+
+                <!-- Controls -->
+                <div class="player-controls">
+                    <button id="repeatBtn" class="control-btn" title="Repeat">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="prevBtn" class="control-btn" title="Previous">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="playBtn" class="control-btn play-btn" title="Play">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button id="nextBtn" class="control-btn" title="Next">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button id="shuffleBtn" class="control-btn" title="Shuffle">
+                        <i class="fas fa-random"></i>
+                    </button>
+                </div>
+
+                <!-- Volume and Settings -->
+                <div class="player-right">
+                    <div class="volume-control">
+                        <i class="fas fa-volume-down"></i>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <button id="playlistToggleBtn" class="control-btn" title="Show Playlist">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Queue/Playlist Panel -->
+            <div id="queuePanel" class="queue-panel">
+                <div class="queue-header">
+                    <h3>Now Playing Queue</h3>
+                    <button id="closeQueueBtn" class="close-btn">×</button>
+                </div>
+                <ul id="queueList" class="queue-list"></ul>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer"></audio>
+
+    <!-- Modals -->
+    <div id="playlistModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create New Playlist</h2>
+            <input type="text" id="playlistNameInput" placeholder="Enter playlist name...">
+            <button id="confirmPlaylistBtn" class="btn-primary">Create</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
